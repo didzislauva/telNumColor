@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<style>
+
+body
+{
+background-color:#d0e4fe;
+}
+
+input.inputs {
+border: 5px solid white; 
+	margin-top:50px;
+    -webkit-box-shadow: 
+      inset 0 0 8px  rgba(0,0,0,0.1),
+            0 0 16px rgba(0,0,0,0.1); 
+    -moz-box-shadow: 
+      inset 0 0 8px  rgba(0,0,0,0.1),
+            0 0 16px rgba(0,0,0,0.1); 
+    box-shadow: 
+      inset 0 0 8px  rgba(0,0,0,0.1),
+            0 0 16px rgba(0,0,0,0.2); 
+    padding: 15px;
+    background: rgba(255,255,255,0.8);
+    margin-left: auto;
+	margin-right:auto;
+	display:block;
+	font-family: "Lucida Sans Typewriter", "Lucida Console", Monaco, "Bitstream Vera Sans Mono", monospace;
+	font-size: 14pt;
+	text-align: center;
+}
+
+.header {
+font-family: "Lucida Sans Typewriter", "Lucida Console", Monaco, "Bitstream Vera Sans Mono", monospace;
+font-size: 20pt;
+text-align: center;
+}
+
+.wrapper {
+padding-top:100px;
+width: 700px;
+margin: auto;
+}
+
+.pikselis {
+margin:auto;
+border:1px solid black;
+margin-top:20px;
+}
+
+.share {
+font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+font-size: 10pt;
+text-align: center;
+}
+
+.newNumber {
+margin-top: 80px;
+font-family: "Lucida Sans Typewriter", "Lucida Console", Monaco, "Bitstream Vera Sans Mono", monospace;
+font-size: 10pt;
+text-align: center;
+}
+
+.smallHeader {
+font-family: "Lucida Sans Typewriter", "Lucida Console", Monaco, "Bitstream Vera Sans Mono", monospace;
+font-size: 10pt;
+text-align: center;
+}
+
+.easterEgg {
+margin-left:auto;
+margin-right:auto;
+margin-top:20px;
+width:800px;
+}
+
+.easterEgg img {
+margin:auto;
+display:block;
+}
+
+.pikselisWrap {
+ background: rgba(255,255,255,1);
+margin:auto;
+margin-top:20px;
+height:30px;
+width:30px;
+}
+</style>
+
+<head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js">
+</script>
+<script>
+
+function isNumber(value) {
+    if ((undefined === value) || (null === value)) {
+        return false;
+    }
+    if (typeof value == 'number') {
+        return true;
+    }
+    return !isNaN(value - 0);
+}
+
+
+function getSelText()
+{
+    var txt = '';
+     if (window.getSelection)
+    {
+        txt = window.getSelection();
+             }
+    else if (document.getSelection) // FireFox
+    {
+        txt = document.getSelection();
+            }
+    else if (document.selection)  // IE 6/7
+    {
+        txt = document.selection.createRange().text;
+            }
+    else return;
+return txt;
+}
+
+
+function GetURLParameter(sParam)
+{
+    var sPageURL = window.location.search.substring(1);
+    var sURLVariables = sPageURL.split('&');
+    for (var i = 0; i < sURLVariables.length; i++) 
+    {
+        var sParameterName = sURLVariables[i].split('=');
+        if (sParameterName[0] == sParam) 
+        {
+            return sParameterName[1];
+        }
+    }
+}
+
+function isGoodRGBValue(colorVal)
+{
+if (isNumber(colorVal)&colorVal>=0 & colorVal<=255)
+	{
+		return true;
+	}
+else
+	{
+		return false;
+	}
+}
+
+
+function isGoodAlphaValue(colorVal)
+{
+if (isNumber(colorVal)&colorVal>=0 & colorVal<=1)
+	{
+		return true;
+	}
+else
+	{
+		return false;
+	}
+}
+
+
+
+function calculateColor(number){
+
+	var result=[];
+	
+	var alpha=Math.floor(number/Math.pow(255,3));
+	//alert(alpha);
+	var firstResidual=number%Math.pow(255,3)
+	//alert(firstResidual);
+	var R=firstResidual%255;
+	//alert(R);
+	var secondResidual=firstResidual-R;
+	//alert (secondResidual)
+	var thirdResidual=secondResidual%Math.pow(255,2);
+	//alert (thirdResidual);
+	var fourthResidual=secondResidual-thirdResidual;
+	//alert(fourthResidual);
+	var G=fourthResidual/Math.pow(255,2);
+	//alert (G);
+	var B=thirdResidual/255;
+	//alert (B);
+	
+	result[0]=alpha;
+	result[1]=R;
+	result[2]=G;
+	result[3]=B;
+	return result;
+	}
+
+
+$(document).ready(function(){
+
+$('.share').hide();
+$('.shareTxt').hide();
+$('.pikselisWrap').hide();
+var content = $('.inputs').val();
+var pixelVals;
+
+var sPageURL = window.location.search.substring(1);
+if (sPageURL.length>0)
+{
+	var R=GetURLParameter('R');
+	var G=GetURLParameter('G');
+	var B=GetURLParameter('B');
+	var Alpha=GetURLParameter('Alpha');
+
+	if (G==null || R==null || B==null || Alpha==null)
+	{
+		
+	}
+	else
+	{
+	$('.inputs').hide();
+	var cssObj = {
+								  'background-color' : 'rgb('+R+','+G+','+B+')',
+								  'font-weight' : '',
+								  'height' : '30px',
+								  'width' : '30px',
+								  'opacity' : 1-Alpha/255
+								  
+								};
+	$('.pikselisWrap').show();
+	$('.pikselis').css(cssObj);
+	$('.header').html("This is the color of my telephone number");
+	$('body').append('<div></br><p class="newNumber"><a href="#">Get the color of your telephone number</a></p></div></br>')
+	}
+}
+
+
+$('.newNumber').click(function() {
+                $('.header').html('enter any (yours) telephone number<br><p class="smallHeader">between 20000000 and 99999999</p>');
+				$('.inputs').show();
+				$('.pikselisWrap').hide();
+				$('.newNumber').hide();
+				
+				
+            });
+
+$('a.tweet', this).bind('click', function(e){
+		e.preventDefault();
+		var loc = $(this).attr('href');
+		var title  = $(this).attr('title');
+		var link = $('.shareTxt').val();
+		window.open('http://twitter.com/share?url=' + loc + '&text=' + title + encodeURIComponent(link), 'twitterwindow', 'height=450, width=550, top='+($(window).height()/2 - 225) +', left='+$(window).width()/2 +', toolbar=0, location=0, menubar=0, directories=0, scrollbars=0');
+		});
+
+
+ $('.inputs').keyup(function() { 
+        if ($('.inputs').val() != content) {
+            content = $('.inputs').val();
+			$('.easterEgg').remove();
+			if (isNumber(content) & (((content>=20000000) & (content<=99999999)) || content==112 || content==113 || content==1188 || content==911 || content==110 || content==118))
+			{
+				if (content>=20000000 & content<=99999999)
+				{
+					pixelVals=calculateColor(content);
+
+					var cssObj = {
+								  'background-color' : 'rgb('+pixelVals[1]+','+pixelVals[2]+','+pixelVals[3]+')',
+								  'font-weight' : '',
+								  'height' : '30px',
+								  'width' : '30px',
+								  'opacity' : 1-pixelVals[0]/255
+								  
+								};
+					$('.pikselisWrap').show();
+					$('.share').show();
+					$('.pikselis').css(cssObj);
+					$('.shareTxt').val(window.location.hostname+window.location.pathname+'?R='+pixelVals[1]+'&G='+pixelVals[2]+'&B='+pixelVals[3]+'&Alpha='+pixelVals[0]);
+				}
+				else
+				{
+					$('body').append('<div class="easterEgg"></div>');
+					switch (content)
+					{
+					case "1188":
+						$('.easterEgg').html('<img src="1188.png" />').show();
+						break;
+					case "112":
+						$('.easterEgg').html('<img src="er.gif" />').show();
+						break;
+					case "110":
+						$('.easterEgg').html('<img src="police.gif" />').show();
+						break;
+					case "113":
+						$('.easterEgg').html('<img src="ambulance.gif" />').show();
+						break;
+					case "118":
+						$('.easterEgg').html('<img src="118.gif" />').show();
+						break;
+					case "911":
+						$('.easterEgg').html('<img src="twinTowers.gif" />').show();
+						break;
+					}
+				}
+			}
+			else
+				{
+					//alert "Asd";
+					$('.pikselisWrap').hide();
+					$('.share').hide();
+				}
+			
+        }
+
+	
+		
+	});
+$('.shareLink').click(function() {
+	
+		if ($('.shareTxt').is(":visible"))
+		{
+		$('.shareTxt').hide();
+		}
+		else
+		{
+		$('.shareTxt').show();
+		$('.shareTxt').select();
+		
+		$('.shareTxt').after('<div id="space">Ctrl+C to copy link</div></br>');
+		}		
+
+    });
+});
+
+
+
+
+</script>
+</head>
+<body>
+
+<div class="wrapper">
+	
+	<div class="inputDiv">
+		<div class="header">
+		enter any (yours) telephone number
+		<br><p class="smallHeader">between 20000000 and 99999999</p>
+		</div>
+	<input class="inputs" type="text" name="LastName" value="" maxlength=8>
+ 	</div>
+	
+	<div class="pikselisWrap"> <div class="pikselis"></div></div>
+
+	<div class="share">
+		<a class="shareLink" href=#>Share the color of your telephone number</a></br>
+		
+		<input class="shareTxt" type="text" name="shareTxtBox" value="" size=40></input></br>
+		<a href="" title="Check out the color of my telephone number! %23numberColor " class="tweet" target="_blank"><img src="share.png" width="150px"/></a><br>
+	</div>
+</div>
+
+</body>
+</html>
